@@ -1,4 +1,5 @@
 import { WeatherData } from "@/types/weather-data";
+import { motion } from "framer-motion";
 
 interface RootLayoutProps {
   children: React.ReactNode;
@@ -23,12 +24,15 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children, weatherData }) => {
     backgroundImageMap[weatherIcon] || backgroundImageMap["clear-day"];
 
   return (
-    <main
+    <motion.main
       className="flex items-center justify-center min-h-screen p-2 bg-cover"
       style={{ backgroundImage: `url('${backgroundImage}')` }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 3, ease: "easeInOut" }}
     >
       {children}
-    </main>
+    </motion.main>
   );
 };
 
