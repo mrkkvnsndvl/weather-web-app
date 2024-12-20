@@ -1,5 +1,4 @@
-import React from "react";
-import { WeatherData } from "@/types/weatherData";
+import { WeatherData } from "@/types/weather-data";
 
 interface RootLayoutProps {
   children: React.ReactNode;
@@ -19,16 +18,13 @@ const backgroundImageMap: Record<string, string> = {
 };
 
 const RootLayout: React.FC<RootLayoutProps> = ({ children, weatherData }) => {
-  // Get the current weather icon
   const weatherIcon = weatherData?.currentConditions?.icon || "clear-day";
-
-  // Get the corresponding background image URL
   const backgroundImage =
     backgroundImageMap[weatherIcon] || backgroundImageMap["clear-day"];
 
   return (
     <main
-      className="p-2 flex justify-center items-center bg-cover min-h-screen"
+      className="flex items-center justify-center min-h-screen p-2 bg-cover"
       style={{ backgroundImage: `url('${backgroundImage}')` }}
     >
       {children}

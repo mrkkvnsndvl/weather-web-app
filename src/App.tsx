@@ -1,17 +1,31 @@
-// App.tsx
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Dashboard from "./components/shared/dashboard";
 import LeftAside from "./components/shared/left-aside";
+import Loading from "./components/shared/loading";
 import { Card } from "./components/ui/card";
 import { useWeatherData } from "./hooks/useWeatherData";
 import RootLayout from "./layouts/root-layout";
-import Loading from "./components/shared/loading"; // Import Loading component
 
 const App = () => {
   const [location, setLocation] = useState("Philippines");
-  const [isCelsius, setIsCelsius] = useState(true); // State to manage temperature unit
+  const [isCelsius, setIsCelsius] = useState(true);
+  const [loadingDelay, setLoadingDelay] = useState(false);
 
   const { data: weatherData, loading, error } = useWeatherData(location);
+
+  useEffect(() => {
+    if (loading) {
+      setLoadingDelay(true);
+
+      const timer = setTimeout(() => {
+        setLoadingDelay(false);
+      }, 2000);
+
+      return () => clearTimeout(timer);
+    } else {
+      setLoadingDelay(false);
+    }
+  }, [loading]);
 
   const handleLocationChange = useCallback((newLocation: string) => {
     setLocation(newLocation);
@@ -23,11 +37,11 @@ const App = () => {
 
   return (
     <RootLayout weatherData={weatherData}>
-      <Card className="flex flex-col xl:flex-row w-full min-h-screen bg-transparent">
-        {loading ? (
+      <Card className="flex flex-col w-full min-h-screen bg-transparent xl:flex-row">
+        {loading || loadingDelay ? (
           <Loading />
         ) : error ? (
-          <div className="text-red-500 flex items-center justify-center w-full">
+          <div className="flex items-center justify-center w-full text-red-500">
             {error.message === "Too many requests. Please try again later."
               ? "Too many requests. Please try again later."
               : "Failed to fetch weather data. Please try again."}
@@ -37,12 +51,12 @@ const App = () => {
             <LeftAside
               weatherData={weatherData}
               onLocationChange={handleLocationChange}
-              isCelsius={isCelsius} // Pass the temperature unit state
+              isCelsius={isCelsius}
             />
             <Dashboard
               weatherData={weatherData}
-              isCelsius={isCelsius} // Pass the temperature unit state
-              onToggleTemperatureUnit={handleToggleTemperatureUnit} // Pass the toggle function
+              isCelsius={isCelsius}
+              onToggleTemperatureUnit={handleToggleTemperatureUnit}
             />
           </>
         )}

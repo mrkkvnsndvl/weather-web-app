@@ -13,7 +13,6 @@ export interface WeatherData {
     tempmin: number;
     tempmax: number;
     description: string;
-    // Add other properties as needed
   }>;
   resolvedAddress: string;
   timezone: string;

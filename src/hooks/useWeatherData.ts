@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { fetchWeatherData } from "../services/api";
 
 export const useWeatherData = (location: string) => {
@@ -14,18 +14,13 @@ export const useWeatherData = (location: string) => {
       setError(null);
 
       try {
-        // Check if data is already cached
         const cachedData = localStorage.getItem(location);
         if (cachedData) {
-          const parsedData = JSON.parse(cachedData);
-          if (isMounted) {
-            setData(parsedData);
-          }
+          setData(JSON.parse(cachedData));
         } else {
           const result = await fetchWeatherData(location);
           if (isMounted) {
             setData(result);
-            // Cache the result
             localStorage.setItem(location, JSON.stringify(result));
           }
         }
@@ -34,9 +29,11 @@ export const useWeatherData = (location: string) => {
           setError(err as Error);
         }
       } finally {
-        if (isMounted) {
-          setLoading(false);
-        }
+        setTimeout(() => {
+          if (isMounted) {
+            setLoading(false);
+          }
+        }, 2000);
       }
     };
 

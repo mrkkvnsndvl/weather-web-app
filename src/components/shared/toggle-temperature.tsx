@@ -11,7 +11,7 @@ const ToggleTemperature: React.FC<ToggleTemperatureProps> = ({ onToggle }) => {
   const handleToggle = () => {
     const newUnit = !isCelsius;
     setIsCelsius(newUnit);
-    onToggle(newUnit); // Notify the parent component of the change
+    onToggle(newUnit);
   };
 
   return (
